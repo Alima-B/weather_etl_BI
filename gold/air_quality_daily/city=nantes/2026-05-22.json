@@ -1,0 +1,125 @@
+{
+    "city": "nantes",
+    "date": "2026-05-22",
+    "records_count": 3,
+    "hours_covered": [
+        19,
+        20,
+        21
+    ],
+    "hourly_data": [
+        {
+            "hour_utc": 19,
+            "hour_utc_formatted": "19:00",
+            "hour": 21,
+            "hour_formatted": "21:00",
+            "aqi": 36,
+            "alert_level": "good",
+            "primary_pollutant": "o3",
+            "pm25": 20,
+            "pm10": 14,
+            "no2": 4.7,
+            "o3": 36.4,
+            "co": null
+        },
+        {
+            "hour_utc": 20,
+            "hour_utc_formatted": "20:00",
+            "hour": 22,
+            "hour_formatted": "22:00",
+            "aqi": 32,
+            "alert_level": "good",
+            "primary_pollutant": "pm25",
+            "pm25": 32,
+            "pm10": 14,
+            "no2": 8.6,
+            "o3": 25,
+            "co": null
+        },
+        {
+            "hour_utc": 21,
+            "hour_utc_formatted": "21:00",
+            "hour": 23,
+            "hour_formatted": "23:00",
+            "aqi": 42,
+            "alert_level": "good",
+            "primary_pollutant": "pm25",
+            "pm25": 42,
+            "pm10": 18,
+            "no2": 11.6,
+            "o3": 15.7,
+            "co": null
+        }
+    ],
+    "avg_aqi": 36.67,
+    "min_aqi": 32,
+    "max_aqi": 42,
+    "aqi_volatility": 5.03,
+    "aqi_trend": "stable",
+    "max_alert_level": "good",
+    "alert_levels_distribution": {
+        "good": 3
+    },
+    "unhealthy_hours_count": 0,
+    "unhealthy_hours_percent": 0.0,
+    "avg_pm25": 31.33,
+    "avg_pm10": 15.33,
+    "avg_no2": 8.3,
+    "avg_o3": 25.7,
+    "avg_co": null,
+    "avg_so2": null,
+    "max_pm25": 42,
+    "max_pm10": 18,
+    "dominant_primary_pollutant": "pm25",
+    "primary_pollutants": [
+        "pm25",
+        "o3"
+    ],
+    "avg_health_risk_score": 7.3,
+    "max_health_risk_score": 8.4,
+    "avg_temperature": 25.0,
+    "avg_humidity": 54.33,
+    "avg_pressure": 1022.67,
+    "avg_wind_speed": 2.0,
+    "uvi_forecast_daily": [
+        {
+            "date": "2026-05-22",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-23",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-24",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-25",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-26",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-27",
+            "avg": 0,
+            "min": 0,
+            "max": 0
+        }
+    ],
+    "data_quality_score": 0.5,
+    "aggregated_at": "2026-05-27T09:47:40.414117",
+    "significant_pollution_flag": false
+}

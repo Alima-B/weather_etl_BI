@@ -1,0 +1,100 @@
+{
+    "city": "toulouse",
+    "date": "2026-05-27",
+    "records_count": 1,
+    "hours_covered": [
+        7
+    ],
+    "hourly_data": [
+        {
+            "hour_utc": 7,
+            "hour_utc_formatted": "07:00",
+            "hour": 9,
+            "hour_formatted": "09:00",
+            "aqi": 40,
+            "alert_level": "good",
+            "primary_pollutant": "pm25",
+            "pm25": 40,
+            "pm10": 22,
+            "no2": 11.7,
+            "o3": 13.8,
+            "co": null
+        }
+    ],
+    "avg_aqi": 40.0,
+    "min_aqi": 40,
+    "max_aqi": 40,
+    "aqi_volatility": null,
+    "aqi_trend": "stable",
+    "max_alert_level": "good",
+    "alert_levels_distribution": {
+        "good": 1
+    },
+    "unhealthy_hours_count": 0,
+    "unhealthy_hours_percent": 0.0,
+    "avg_pm25": 40.0,
+    "avg_pm10": 22.0,
+    "avg_no2": 11.7,
+    "avg_o3": 13.8,
+    "avg_co": null,
+    "avg_so2": null,
+    "max_pm25": 40,
+    "max_pm10": 22,
+    "dominant_primary_pollutant": "pm25",
+    "primary_pollutants": [
+        "pm25"
+    ],
+    "avg_health_risk_score": 8.0,
+    "max_health_risk_score": 8.0,
+    "avg_temperature": 22.0,
+    "avg_humidity": 54.5,
+    "avg_pressure": 1023.0,
+    "avg_wind_speed": 0.7,
+    "uvi_forecast_daily": [
+        {
+            "date": "2026-05-25",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        },
+        {
+            "date": "2026-05-26",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        },
+        {
+            "date": "2026-05-27",
+            "avg": 1,
+            "min": 0,
+            "max": 9
+        },
+        {
+            "date": "2026-05-28",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        },
+        {
+            "date": "2026-05-29",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        },
+        {
+            "date": "2026-05-30",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        },
+        {
+            "date": "2026-05-31",
+            "avg": 1,
+            "min": 0,
+            "max": 8
+        }
+    ],
+    "data_quality_score": 0.5,
+    "aggregated_at": "2026-05-27T09:47:40.082083",
+    "significant_pollution_flag": false
+}

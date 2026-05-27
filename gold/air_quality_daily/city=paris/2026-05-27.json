@@ -1,0 +1,94 @@
+{
+    "city": "paris",
+    "date": "2026-05-27",
+    "records_count": 1,
+    "hours_covered": [
+        7
+    ],
+    "hourly_data": [
+        {
+            "hour_utc": 7,
+            "hour_utc_formatted": "07:00",
+            "hour": 9,
+            "hour_formatted": "09:00",
+            "aqi": 68,
+            "alert_level": "moderate",
+            "primary_pollutant": "pm25",
+            "pm25": 68,
+            "pm10": 12,
+            "no2": 39.5,
+            "o3": 18.1,
+            "co": 0.1
+        }
+    ],
+    "avg_aqi": 68.0,
+    "min_aqi": 68,
+    "max_aqi": 68,
+    "aqi_volatility": null,
+    "aqi_trend": "stable",
+    "max_alert_level": "moderate",
+    "alert_levels_distribution": {
+        "moderate": 1
+    },
+    "unhealthy_hours_count": 0,
+    "unhealthy_hours_percent": 0.0,
+    "avg_pm25": 68.0,
+    "avg_pm10": 12.0,
+    "avg_no2": 39.5,
+    "avg_o3": 18.1,
+    "avg_co": 0.1,
+    "avg_so2": 0.6,
+    "max_pm25": 68,
+    "max_pm10": 12,
+    "dominant_primary_pollutant": "pm25",
+    "primary_pollutants": [
+        "pm25"
+    ],
+    "avg_health_risk_score": 13.6,
+    "max_health_risk_score": 13.6,
+    "avg_temperature": 21.1,
+    "avg_humidity": 61.0,
+    "avg_pressure": 1025.1,
+    "avg_wind_speed": 1.0,
+    "uvi_forecast_daily": [
+        {
+            "date": "2026-05-26",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-27",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-28",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-29",
+            "avg": 1,
+            "min": 0,
+            "max": 7
+        },
+        {
+            "date": "2026-05-30",
+            "avg": 1,
+            "min": 0,
+            "max": 6
+        },
+        {
+            "date": "2026-05-31",
+            "avg": 1,
+            "min": 0,
+            "max": 6
+        }
+    ],
+    "data_quality_score": 0.75,
+    "aggregated_at": "2026-05-27T09:47:40.245988",
+    "significant_pollution_flag": false
+}
