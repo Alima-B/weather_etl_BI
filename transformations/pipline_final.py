@@ -16,6 +16,9 @@ v3 IMPROVEMENTS:
 v3.1
 - MongoDB integration for gold : add 3 collections for air quality, weather and combined data
 """
+# définir save_air_forecast_data dans HivePartitionedStorage et l'utiliser dans pipline_final.py
+# rajout de or d.air_forecast_data ? dans le logger count ?
+# append les donénes de forecast dans le silver de air quality ? ou créer silver forcast indé?
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -24,6 +27,7 @@ from typing import Any, Dict, List, Optional
 import json
 
 from clients.openweather_client import OpenWeatherClient
+from clients.openweatherAir_client import OpenWeatherAirQualityClient
 from clients.aqicn_client import AQICNClient
 from config.settings import Settings, get_settings
 from config.towns import FRENCH_TOWNS, Town
@@ -48,11 +52,13 @@ class ExtractedData:
     town: Town
     weather_data: Optional[Dict[str, Any]] = None
     air_quality_data: Optional[Dict[str, Any]] = None
+    air_forecast_data: Optional[Dict[str, Any]] = None
     weather_raw_path: Optional[Path] = None
     air_quality_raw_path: Optional[Path] = None
+    air_forecast_raw_path: Optional[Path] = None
     weather_error: Optional[str] = None
     air_quality_error: Optional[str] = None
-
+    air_forecast_error: Optional[str] = None
 
 @dataclass
 class ETLResult:
@@ -91,6 +97,7 @@ class WeatherETLPipeline:
 
         self._weather_client: Optional[OpenWeatherClient] = None
         self._air_quality_client: Optional[AQICNClient] = None
+        self._air_quality_forecast_client: Optional[OpenWeatherAirQualityClient] = None
 
         logger.info(f"WeatherETLPipeline initialized for {len(self._towns)} towns")
 
@@ -106,7 +113,12 @@ class WeatherETLPipeline:
             timeout=self._settings.request_timeout,
             max_retries=self._settings.max_retries,
         )
-
+        self._air_quality_forecast_client = OpenWeatherAirQualityClient(
+            api_key=self._settings.openweather_api_key,
+            timeout=self._settings.request_timeout,
+            max_retries=self._settings.max_retries,
+        )
+            
         # Connect to MongoDB
         if self._mongodb.connect():
             logger.info("MongoDB connected successfully")
@@ -162,9 +174,19 @@ class WeatherETLPipeline:
                 data.air_quality_error = str(e)
                 logger.error(f"  ✗ Air Quality extraction failed: {e}")
 
+            # Extract air forecast
+            try:
+                data.air_forecast_data = self._air_quality_forecast_client.fetch_air_quality_forecast(town)
+                forecast_count = len(data.air_forecast_data.get('list', []))
+                logger.info(f"  ✓ Air Forecast: {forecast_count} forecast records")
+            except Exception as e:
+                data.air_forecast_error = str(e)
+                logger.error(f"  ✗ Air Forecast extraction failed: {e}")
+
             extracted_data.append(data)
 
-        success_count = sum(1 for d in extracted_data if d.weather_data or d.air_quality_data)
+        # rajout de or d.air_forecast_data ?
+        success_count = sum(1 for d in extracted_data if d.weather_data or d.air_quality_data or d.air_forecast_data)
         logger.info(f"Extraction complete: {success_count}/{len(self._towns)} cities have data")
         return extracted_data
 
@@ -210,6 +232,21 @@ class WeatherETLPipeline:
                 except Exception as e:
                     data.air_quality_error = str(e)
                     logger.error(f"  ✗ {town.name}: Failed to save air quality raw: {e}")
+            
+            # Save air forecast raw (filesystem only - NOT MongoDB)
+            if data.air_forecast_data:
+                try:
+                    paths = self._storage.save_air_forecast_data(
+                        api_response=data.air_forecast_data,
+                        city_name=town.name,
+                        target_hour=reference_hour,
+                    )
+                    if paths:
+                        data.air_forecast_raw_path = paths[0]
+                        logger.info(f"  ✓ {town.name}: Saved air forecast raw → {paths[0].name}")
+                except Exception as e:
+                    data.air_forecast_error = str(e)
+                    logger.error(f"  ✗ {town.name}: Failed to save air forecast raw: {e}")
 
     # =====================================================
     # PHASE 3: TRANSFORM (Silver layer - filesystem + MongoDB)
@@ -321,6 +358,7 @@ class WeatherETLPipeline:
         # Run the gold pipeline (writes all files to filesystem)
         try:
             gold = GoldPipeline(
+                raw_base_path=self._raw_base,
                 silver_base_path=self._silver_base,
                 gold_base_path=self._gold_base,
             )

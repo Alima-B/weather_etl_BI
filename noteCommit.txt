@@ -1,0 +1,11 @@
+Modif pour l'ajout du forecast pollution
+
+Clients/openweatherAir_client : ajout d'une classe pour récupérer les données 
+
+storage/hive_storage fct modifiées : 
+- _extract_timestamp_from_data : récupère le dt (ajout dans api_source = openweather)
+- _build_filename
+- add save_air_forecast_data
+
+transformation/air_quality_forecast_transformation
+création fonction add_forecast_to_daily_json pour rajouter forecast aux fichier gold air_quality

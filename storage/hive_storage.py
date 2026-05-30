@@ -90,7 +90,7 @@ class HivePartitionedStorage:
             Optional[datetime]: Extracted timestamp in UTC
         """
         try:
-            if api_source == "openweather":
+            if api_source == "openweather" or api_source == "openweather_air_forecast":
                 # OpenWeather uses Unix timestamp (UTC) in multiple possible locations
                 dt_value = None
                 
@@ -107,6 +107,10 @@ class HivePartitionedStorage:
                     # Priority 3: dt at root level
                     elif "dt" in data:
                         dt_value = data["dt"]
+                        
+                    # Get dt for forecast air quality data
+                    elif "list" in data and isinstance(data["list"], list) :
+                        dt_value = data["list"][0].get("dt")
                 
                 if dt_value:
                     return datetime.fromtimestamp(int(dt_value), tz=timezone.utc)
@@ -186,6 +190,8 @@ class HivePartitionedStorage:
             return f"weather_{hour_str}_raw.json"
         elif api_source == "aqicn":
             return f"air_quality_{hour_str}_raw.json"
+        elif api_source == "openweather_air_forecast":
+            return f"air_forecast_{hour_str}_raw.json"
         else:
             return f"{api_source}_{hour_str}_raw.json"
     
@@ -381,6 +387,59 @@ class HivePartitionedStorage:
             hour_timestamp=hour_timestamp
         )
     
+    def save_air_forecast_data(
+        self,
+        api_response: Dict[str, Any],
+        city_name: str,
+        target_hour: Optional[datetime] = None,
+    ) -> List[Path]:
+        """Save hourly air quality forecast records from OpenWeather API response.
+                            
+        Args:
+            api_response: Full API response from OpenWeather
+            city_name: Name of the city
+            target_hour: Optional target hour to extract (defaults to current UTC time)
+            
+        Returns:
+            List[Path]: List of saved file paths
+        """
+        saved_paths = []
+        hourly_data = api_response.get("list", [])
+        
+        if not hourly_data:
+            logger.warning(f"No forecast data found for {city_name}")
+            return saved_paths
+        
+        # Use provided target hour or extract from API response
+        if target_hour is None:
+            current_dt = api_response.get("list", [])[0].get("dt")
+            if current_dt:
+                target_hour = datetime.fromtimestamp(int(current_dt), tz=timezone.utc)
+            else:
+                target_hour = datetime.now(timezone.utc)
+        
+        # cutoff_time = target_hour - timedelta(hours=hours_back)
+                
+        # get the first hour record (actual hour)
+        hour_dt = hourly_data[0].get("dt")
+        hour_time = datetime.fromtimestamp(int(hour_dt), tz=timezone.utc)
+           
+        try:
+            filepath = self.save_hourly_data(
+                data=api_response,
+                api_source="openweather_air_forecast",
+                city_name=city_name,
+                hour_timestamp=hour_time
+            )
+            saved_paths.append(filepath)
+        except Exception as e:
+            logger.error(f"Failed to save pollution forecast at {hour_time} for {city_name}: {e}")
+    
+        logger.info(f"Saved {len(saved_paths)} hourly pollution forecast records for {city_name}")
+        return saved_paths
+    
+    
+    
     def load(
         self,
         city_name: str,
@@ -478,6 +537,8 @@ class HivePartitionedStorage:
             pattern = "weather_*_raw.json"
         elif api_source == "aqicn":
             pattern = "air_quality_*_raw.json"
+        elif api_source == "openweather_air_forecast":
+            pattern = "air_forecast_*_raw.json"
         else:
             pattern = "*.json"
         

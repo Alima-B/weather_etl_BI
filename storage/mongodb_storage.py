@@ -107,7 +107,7 @@ class MongoDBStorage:
             
             self._db.gold_weather_daily.create_index([("city", ASCENDING), ("date", ASCENDING)], unique=True)
             self._db.gold_weather_daily.create_index([("etl_timestamp", ASCENDING)])
-            self._db.gold_air_quality_daily.create_index([("date", ASCENDING)])
+            self._db.gold_weather_daily.create_index([("date", ASCENDING)])
             
             self._db.gold_air_quality_daily.create_index([("city", ASCENDING), ("date", ASCENDING)], unique=True)
             self._db.gold_air_quality_daily.create_index([("etl_timestamp", ASCENDING)])

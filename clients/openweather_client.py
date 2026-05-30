@@ -146,3 +146,6 @@ class OpenWeatherClient(APIClient):
                 results[town.name] = {"error": str(e), "town": town.name}
         
         return results
+
+
+    

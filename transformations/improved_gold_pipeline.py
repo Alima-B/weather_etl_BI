@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import Dict, List, Optional, Any, Tuple
 from utils.logger import get_logger
+from transformations.air_quality_forecast_transformer import add_forecast_to_daily_json
+
 
 logger = get_logger(__name__)
 
@@ -23,7 +25,8 @@ logger = get_logger(__name__)
 class GoldPipeline:
     """Gold layer aggregation with comprehensive KPIs."""
 
-    def __init__(self, silver_base_path: Path, gold_base_path: Path):
+    def __init__(self,raw_base_path: Path, silver_base_path: Path, gold_base_path: Path):
+        self.raw_base_path = Path(raw_base_path)
         self.silver_base_path = Path(silver_base_path)
         self.gold_base_path = Path(gold_base_path)
 
@@ -423,6 +426,28 @@ class GoldPipeline:
                     gold_record["max_aqi"] >= 150 or
                     gold_record["unhealthy_hours_count"] >= 4
                 )
+                
+                last_hour_covered = gold_record["hours_covered"][-1] if gold_record["hours_covered"] else None
+                last_forecast_path = next(
+                    self.raw_base_path.glob(
+                        f"city={city}/year={date[0:4]}/month={date[5:7]}/day={date[8:10]}"
+                        f"/air_forecast_{last_hour_covered}_*.json"
+                    ),
+                    None  
+                )
+                
+                if last_forecast_path :
+                    try:
+                        with open(last_forecast_path) as f:
+                            forecast_data = json.load(f)
+                            gold_record = add_forecast_to_daily_json(gold_record, forecast_data)
+                    except Exception as e:
+                        logger.warning(f"Failed to load last hour forecast for {city} on {date}: {e}")
+
+                # load forecast data for the last hour covered (if available) and add it to the gold record
+                
+                # add forecast data for the last recorded hour
+                # gold_record = add_forecast_to_daily_json(gold_record)
                 
                 self._save_gold_record("air_quality_daily", city, date, gold_record)
                 
